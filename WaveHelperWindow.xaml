@@ -87,9 +87,9 @@
             </TabItem>
         </TabControl>
            <GridSplitter Grid.Row="2" Height="5" HorizontalAlignment="Stretch" />
-        
-        
-        <wv2:WebView2 Name="webView" Source="http://www.bing.com" Grid.Row="5" />
+
+
+        <wv2:WebView2 Name="webView" Source="https://github.com/jackpublic/WaveHelper#readme" Grid.Row="5" />
 
     </Grid>
 </Window>
