@@ -29,16 +29,19 @@
             <Button Content="Reorder By Group" Height="30" Margin="10" Click="ReorderByGroup"/>
             <Button Content="Move Up" Click="MoveUp" />
             <Button Content="Move Down" Click="MoveDown" />
-            <Button Content="Copy" Click="Copy" />
             <Button Content="Delete" Click="Delete" />
 
+            <TextBlock VerticalAlignment="Center">Index: </TextBlock>
+            <TextBox x:Name="txtIdx" VerticalAlignment="Center" Margin="5" Width="25"></TextBox>
+            <Button Content="Insert . for all" Click="InsertDot"/>
+            <Button Content="Remove . for all" Click="RemoveDot"/>
             <Button Content="Import File..." Click="ImportFile" />
             <Button Content="Clean Up" Click="Cleanup" Background="LightSeaGreen"/>
             <Button Content="Send to Wavedrom" Click="GenerateWaveForm" Background="Goldenrod"/>
         </StackPanel>
         <TabControl x:Name="tabs" Grid.Row="1">
             <TabItem Header="Wave Data">
-                <DataGrid x:Name="dg" ItemsSource="{Binding Groupedsignals}" AutoGenerateColumns="False" FrozenColumnCount="2" FontFamily="Courier New" SelectionMode="Single" Grid.Row="1" AlternatingRowBackground="OldLace">
+                <DataGrid x:Name="dg" ItemsSource="{Binding Groupedsignals}" AutoGenerateColumns="False" FrozenColumnCount="2" FontFamily="Courier New" SelectionMode="Single" Grid.Row="1" AlternatingRowBackground="OldLace" CanUserSortColumns="False">
                     <DataGrid.GroupStyle>
                         <GroupStyle>
                             <GroupStyle.HeaderTemplate>
@@ -86,10 +89,10 @@
                 <TextBox x:Name="tb" TextWrapping="Wrap" AcceptsReturn="True" AcceptsTab="True" FontFamily="Courier New" Background="LightGray"/>
             </TabItem>
         </TabControl>
-           <GridSplitter Grid.Row="2" Height="5" HorizontalAlignment="Stretch" />
+        <GridSplitter Grid.Row="2" Height="5" HorizontalAlignment="Stretch" />
 
 
-        <wv2:WebView2 Name="webView" Source="https://github.com/jackpublic/WaveHelper#readme" Grid.Row="5" />
+        <wv2:WebView2 Name="webView" Source="https://github.com/jackpublic/WaveHelper#readme" Grid.Row="3" />
 
     </Grid>
 </Window>

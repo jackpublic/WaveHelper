@@ -98,7 +98,11 @@ namespace WaveHelper
         }
         private void Delete(object sender, RoutedEventArgs e)
         {
-
+            int n = dg.SelectedIndex;
+            if (n < dg.Items.Count - 1)
+            {
+                sigs.RemoveAt(n);
+            }
         }
         
         private void DataGridToWaveJson()
@@ -194,18 +198,38 @@ namespace WaveHelper
 
         private void Cleanup(object sender, RoutedEventArgs e)
         {
-            var waves_max = sigs.Select(x => x.wave.Trim()).Max(y => y.Length);              
-            var nodes_max = sigs.Select(x => x.node.Trim()).Max(y => y.Length);
-            var max = waves_max > nodes_max ? waves_max : nodes_max;
+            //use first signal's length to set all signal length
+           // var waves_max = sigs.Select(x => x.wave.Trim()).Max(y => y.Length);              
+           // var nodes_max = sigs.Select(x => x.node.Trim()).Max(y => y.Length);
+            //var max = waves_max > nodes_max ? waves_max : nodes_max;
+            var len = sigs[0].wave.Trim().Length;   
             foreach (var item in sigs)
             {
-                if (item.wave.Length < max)
+                if (item.wave.Length < len)
                 {
-                    item.wave = item.wave.PadRight(max, '.');
+                    item.wave = item.wave.PadRight(len, '.');
                 }
-                if (item.node.Length < max)
+                else if (item.wave.Length > len)
                 {
-                    item.node = item.node.PadRight(max, '.');
+                    int x = item.wave.Length;
+                    for (int i=item.wave.Length-1; i >= len; i--)
+                    {
+                        if (item.wave.Substring(i,1)==".")
+                        {
+                            x--;
+                        }
+                        else { break; }
+                    }
+                    item.wave = item.wave.Substring(0, x);
+                }
+                
+                if (item.node.Length < len)
+                {
+                    item.node = item.node.PadRight(len, '.');
+                }
+                else if (item.node.Length > len)
+                {
+                    item.node = item.node.Substring(0, len);    
                 }
             }
 
@@ -213,10 +237,17 @@ namespace WaveHelper
 
         private void ImportFile(object sender, RoutedEventArgs e)
         {
+            var fsetting = "settings.txt";
+            var initDir = Directory.GetCurrentDirectory();
+            if (File.Exists(fsetting))
+            {
+                initDir = File.ReadAllText(fsetting);
+            }
             //browse for json file
             OpenFileDialog openFileDialog = new OpenFileDialog();
             openFileDialog.Filter = "json files (*.json)|*.json|All files (*.*)|*.*";
-            openFileDialog.InitialDirectory = Directory.GetCurrentDirectory();
+            openFileDialog.InitialDirectory = initDir;
+            openFileDialog.RestoreDirectory = true;
             if (openFileDialog.ShowDialog() == true)
             {
                 JsonFile = openFileDialog.FileName;
@@ -252,8 +283,43 @@ namespace WaveHelper
                     //msgbox to user
                     MessageBox.Show("Check input json file format");
                 }
+                File.WriteAllText(fsetting, Path.GetDirectoryName(JsonFile));
             }
 
+        }
+
+        private void InsertDot(object sender, RoutedEventArgs e)
+        {
+            if (txtIdx.Text.Trim().Length > 0)
+            {
+                int x;
+                var b = int.TryParse(txtIdx.Text, out x);
+                if (b)
+                {
+                    foreach (var item in sigs)
+                    {
+                        item.node = item.node.Insert(x, ".");
+                        item.wave = item.wave.Insert(x, ".");
+                    }
+                }
+            }
+        }
+
+        private void RemoveDot(object sender, RoutedEventArgs e)
+        {
+            if (txtIdx.Text.Trim().Length>0)
+            {
+                int x;
+                var b = int.TryParse(txtIdx.Text, out x);
+                if (b)
+                {
+                    foreach(var item in sigs)
+                    {
+                        item.node = item.node.Remove(x, 1);
+                        item.wave = item.wave.Remove(x, 1);
+                    }
+                }
+            }
         }
     }
 }
